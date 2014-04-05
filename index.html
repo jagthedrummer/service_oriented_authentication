@@ -322,6 +322,86 @@
         </section>
 
 
+<section>
+<pre><code>
+  # Gemfile
+  gem 'doorkeeper', '~> 1.1.0'
+
+</code></pre>
+
+<pre><code>
+  $ bundle install
+
+  $ rails generate doorkeeper:install
+      create  config/initializers/doorkeeper.rb
+      create  config/locales/doorkeeper.en.yml
+       route  use_doorkeeper
+
+</code></pre>
+
+
+</section>
+<section>
+<pre><code>
+$ rails generate doorkeeper:migration
+      create  db/migrate/..._create_doorkeeper_tables.rb
+
+$ rake db:migrate
+==  CreateDoorkeeperTables: migrating =========================================
+-- create_table(:oauth_applications)
+   -> 0.0323s
+-- create_table(:oauth_access_grants)
+   -> 0.0036s
+-- create_table(:oauth_access_tokens)
+   -> 0.0031s
+-- add_index(:oauth_applications, :uid, {:unique=>true})
+   -> 0.0039s
+-- add_index(:oauth_access_grants, :token, {:unique=>true})
+   -> 0.0015s
+-- add_index(:oauth_access_tokens, :token, {:unique=>true})
+   -> 0.0017s
+-- add_index(:oauth_access_tokens, :resource_owner_id)
+   -> 0.0017s
+-- add_index(:oauth_access_tokens, :refresh_token, {:unique=>true})
+   -> 0.0021s
+==  CreateDoorkeeperTables: migrated (0.0504s) ================================
+</code></pre>
+</section>
+
+<section>
+<pre><code>
+  Doorkeeper.configure do
+
+    # This block will be called to check whether the resource owner is authenticated or not.
+    resource_owner_authenticator do
+      current_user || warden.authenticate!(:scope => :user)
+      # User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
+    end
+
+    # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
+    admin_authenticator do
+      current_admin_user || warden.authenticate!(:scope => :user)
+    end
+
+    # For example if dealing with trusted a application.
+    skip_authorization do |resource_owner, client|
+      true
+      #client.superapp? or resource_owner.admin?
+    end
+  end
+</code></pre>
+</section>
+
+<section>
+  <img src="img/doorkeeper_applications.png" alt="" class="no-border"/>
+</section>
+
+
+
+
+<section>
+  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
+</section>
 
         <section data-background="img/pritzger_tunnel.jpg" data-state="title-slide">
           <h1 class="smallest">Client Implementation</h1>
