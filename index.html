@@ -389,8 +389,67 @@ $ rake db:migrate
       #client.superapp? or resource_owner.admin?
     end
   end
+
 </code></pre>
 </section>
+
+<section>
+<pre><code>
+  class Oauth::UsersController < ApplicationController
+    doorkeeper_for :all
+    respond_to     :json
+
+    # GET /me.json
+    def me
+      respond_with current_resource_owner
+    end
+
+    private
+
+    # Find the user that owns the access token
+    def current_resource_owner
+      User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+    end
+  end
+
+</code></pre>
+</section>
+
+
+<section>
+<pre><code>
+  class Oauth::SessionsController < Devise::SessionsController
+
+    def create
+      super do |resource|
+        set_user_cookie(resource)
+      end
+    end
+
+    def destroy
+      super do |resource|
+        remove_user_cookie
+      end
+    end
+
+    def env_domain
+      domain = ENV['COOKIE_DOMAIN'] || "localhost"
+      domain == "localhost" ? :all : domain
+    end
+
+    def set_user_cookie(user)
+      cookies[:so_auth] = { :value => user.id, :domain => env_domain }
+    end
+
+    def remove_user_cookie
+      cookies.delete(:so_auth, :domain => env_domain)
+    end
+
+  end
+
+</code></pre>
+</section>
+
 
 <section>
   <img src="img/doorkeeper_applications.png" alt="" class="no-border"/>
@@ -402,6 +461,16 @@ $ rake db:migrate
 <section>
   <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
 </section>
+
+<section>
+  <img src="img/doorkeeper_new_app.png" alt="" class="no-border"/>
+</section>
+
+<section>
+  <img src="img/doorkeeper_app_info.png" alt="" class="no-border"/>
+</section>
+
+
 
         <section data-background="img/pritzger_tunnel.jpg" data-state="title-slide">
           <h1 class="smallest">Client Implementation</h1>
