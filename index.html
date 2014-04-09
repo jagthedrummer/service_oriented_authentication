@@ -377,6 +377,7 @@
 
 
 <section>
+  <h2><code>doorkeeper</code> installation</h2>
 <pre><code>
   # Gemfile
   gem 'doorkeeper', '~> 1.1.0'
@@ -388,7 +389,7 @@
 
 </code></pre>
 
-<pre class="fragment fade-in"><code>
+<pre class="fragment fade-in"><code class="bash">
   $ rails generate doorkeeper:install
       create  config/initializers/doorkeeper.rb
       create  config/locales/doorkeeper.en.yml
@@ -400,6 +401,7 @@
 </section>
 
 <section>
+<h2><code>doorkeeper</code> installation</h2>
 <pre><code>
 $ rake routes | grep oauth
                               GET        /oauth/authorize/:code(.:format)             doorkeeper/authorizations#show
@@ -426,14 +428,18 @@ oauth_authorized_applications GET        /oauth/authorized_applications(.:format
 
 
 <section>
-<pre><code>
+<h2><code>doorkeeper</code> installation</h2>
+<pre><code class="bash">
 $ rails generate doorkeeper:migration
       create  db/migrate/..._create_doorkeeper_tables.rb
 
 </code></pre>
 </section>
+
+
 <section>
-<pre><code>
+<h2><code>doorkeeper</code> installation</h2>
+<pre><code class="bash">
 $ rake db:migrate
 ==  CreateDoorkeeperTables: migrating =========================================
 
@@ -460,11 +466,12 @@ $ rake db:migrate
 </section>
 
 <section>
-<pre><code>
+<h2><code>doorkeeper</code> configuration</h2>
+<pre><code class="ruby">
   # config/initializers/doorkeeper.rb
   Doorkeeper.configure do
 
-    ...
+    #...
 
     # This block will be called to check whether the 
     # resource owner is authenticated or not.
@@ -473,7 +480,7 @@ $ rake db:migrate
       # User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
     end
 
-    ...
+    #...
 
   end
 
@@ -481,10 +488,16 @@ $ rake db:migrate
 </section>
 
 
+<section>
+  <h2>OAuth application management</h2>
+  <img src="img/doorkeeper_applications.png" alt="" class="no-border"/>
+  <h2>Protect it!</h2>
+</section>
 
 
 <section>
-<pre><code>
+<h2><code>doorkeeper</code> configuration</h2>
+<pre><code class="ruby">
   # config/initializers/doorkeeper.rb
   Doorkeeper.configure do
 
@@ -493,7 +506,9 @@ $ rake db:migrate
     # You want to restrict access to the web interface 
     # for adding oauth authorized applications
     admin_authenticator do
-      current_admin_user || warden.authenticate!(:scope => :user)
+      warden.authenticate!(:scope => :user) unless current_user
+      current_user.admin? ? current_user : redirect_to('/')
+      # current_admin_user || warden.authenticate!(:scope => :user)
     end
 
     ...
@@ -504,16 +519,23 @@ $ rake db:migrate
 </section>
 
 
+<section>
+  <h2>OAuth application authorization</h2>
+  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
+  <h2>Get rid of it!</h2>
+</section>
+
 
 <section>
-<pre><code>
+<h2><code>doorkeeper</code> configuration</h2>
+<pre><code class="ruby">
   # config/initializers/doorkeeper.rb
   Doorkeeper.configure do
 
     ...
 
-    # We want to skip the 
-    # "can application X use you profile?" screen
+    # We want to skip the screen that asks
+    # "can application X use you profile?"
     skip_authorization do |resource_owner, client|
       true
       #client.superapp? or resource_owner.admin?
@@ -529,13 +551,31 @@ $ rake db:migrate
 
 
 
+<section>
+<h2>Pass user info to the client</h2>
+<pre><code>
+  # config/routes.rb
+  SoAuthProvider::Application.routes.draw do
+    
+    #...
+
+    get "oauth/me" => "oauth/users#me"
+
+    #...
+
+  end
+
+</code></pre>
+</section>
 
 
 
 
 
 <section>
-<pre><code>
+<h2>Pass user info to the client</h2>
+<pre><code class="ruby">
+  # oauth/users_controller.rb
   class Oauth::UsersController < ApplicationController
     doorkeeper_for :all
     respond_to     :json
@@ -558,7 +598,45 @@ $ rake db:migrate
 
 
 <section>
+<h2>Pass user info to the client</h2>
+<pre><code class="json">
+  {
+    "id" : 1,
+    "email" : "jeremy@octolabs.com",
+    "name" : "Jeremy Green"
+  }
+
+</code></pre>
+</section>
+
+
+
+
+
+
+<section>
+<h2>Single sign off (Provider side)</h2>
 <pre><code>
+  # config/routes.rb
+  SoAuthProvider::Application.routes.draw do
+    
+    #...
+    
+    devise_for :users, 
+      :controllers => {:sessions => "oauth/sessions"}
+
+    #...
+
+  end
+
+</code></pre>
+</section>
+
+
+
+<section>
+<h2>Single sign off (Provider side)</h2>
+<pre><code class="ruby">
   class Oauth::SessionsController < Devise::SessionsController
 
     def create
@@ -572,6 +650,23 @@ $ rake db:migrate
         remove_user_cookie
       end
     end
+
+    #...
+
+  end
+
+</code></pre>
+</section>
+
+
+
+
+<section>
+<h2>Single sign off (Provider side)</h2>
+<pre><code class="ruby">
+  class Oauth::SessionsController < Devise::SessionsController
+
+    #...
 
     def env_domain
       domain = ENV['COOKIE_DOMAIN'] || "localhost"
@@ -592,24 +687,15 @@ $ rake db:migrate
 </section>
 
 
-<section>
-  <img src="img/doorkeeper_applications.png" alt="" class="no-border"/>
-</section>
 
 
 
 
-<section>
-  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
-</section>
 
-<section>
-  <img src="img/doorkeeper_new_app.png" alt="" class="no-border"/>
-</section>
 
-<section>
-  <img src="img/doorkeeper_app_info.png" alt="" class="no-border"/>
-</section>
+
+
+
 
 
 
@@ -622,13 +708,55 @@ $ rake db:migrate
 
         <section>
           <h1 class="smallest">Client Implementation</h1>
+          <h3><a href="https://github.com/intridea/omniauth">intridea/omniauth</a></h3>
+          <img src="img/omniauth.png" alt="" class="no-border"/>
           <aside class="notes">
             
           </aside>
         </section>
 
 <section>
+<h2>Create a rails engine</h2>
+<pre><code class="bash">
+  $ rails plugin new so_auth -T --dummy-path=spec/dummy --full
+
+</code></pre>
+</section>
+
+
+
+
+<section>
+  <h2><code>so_auth</code> usage</h2>
+</section>
+
+<section>
+  <h2><code>so_auth</code> installation</h2>
+  <p>GitHub token thingy?</p>
+</section>
+
+
+<section>
+  <h2><code>so_auth</code> configuration</h2>
+  env vars
+</section>
+
+<section>
+  <img src="img/doorkeeper_new_app.png" alt="" class="no-border"/>
+</section>
+
+<section>
+  <img src="img/doorkeeper_app_info.png" alt="" class="no-border"/>
+</section>
+
+
+
+<section>
   Using token.get to call api endpoints on the main service
+</section>
+
+<section>
+  Demo?
 </section>
 
 <section data-background="img/pritzger_planet.jpg" data-state="title-slide">
