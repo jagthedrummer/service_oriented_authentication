@@ -56,7 +56,7 @@
           <p>&nbsp;</p>
           <p>&nbsp;</p>
           <h1>SO Auth!</h1>
-          <h2>Much Entication</h2>
+          <!--h2>Much Entication</h2-->
           <h2>Wow</h2>
           <h2>Very Architecture</h2>
         </section>
@@ -257,47 +257,58 @@
         </section>
 
 <section>
+  <p>Just a web client <br />&nbsp;</p>
   <img src="img/rails_auth_flow_redirects_1_0.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>GET /protected <br />&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>Redirect #{provider}/authorize?client_id=123&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>GET #{provider}/authorize?client_id=123&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>Redirect #{client}/callback?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border stretch"/>
 </section>
 
 
 <section>
+  <p><code>GET #{client}/callback?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>POST /oauth/token?client_id=123&client_secret=456&code=abc</code></p>
   <img src="img/rails_auth_flow_redirects_2_1.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>{token:'42ab', refresh_token:'9876', uid:'jag'}</code></p>
   <img src="img/rails_auth_flow_redirects_2_2.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>GET /me.json?token=42ab<br/>&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_2_3.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>{id:111, name:"Jeremy Green", email:"jeremy@octolabs.com"}</code></p>
   <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
+  <p><code>Redirect /protected <br />&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border stretch"/>
   <aside class="notes">
     The request sequence looks something like this.  OK, not really.  I'll be speaking
@@ -305,6 +316,47 @@
     about this part.
   </aside>
 </section>
+
+
+<section>
+  <p><code>GET /protected <br />&nbsp;</code></p>
+  <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border stretch"/>
+</section>
+
+<section>
+  <p><code>200 OK /protected <br />Whew!</code></p>
+  <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border stretch"/>
+</section>
+
+<section>
+  <div class="fragment fade-in">
+    <h2>Seven</h2>
+    <br /><br />
+    <h3>Seven request/response pairs</h3>
+  </div>
+  <br /><br />
+  <h1 class="fragment fade-in">Seven!!</h1>
+  <aside class="notes">
+    How many request/response pairs was that?
+  </aside>
+</section>
+
+<section>
+  <h2>RubyGems.org to the rescue!</h2>
+  <img src="img/rubygems.png" alt="" class="no-border stretch"/>
+</section>
+
+<section>
+  <h1>The Plan</h1>
+  <br /><br />
+  <ol>
+    <li>Add OAuth2 provider functions <br/>to an existing Devise app<br/><br/></li>
+    <li>Create a <code>so_auth</code> gem that knows<br/>how to delegate to the provider <br /><br /></li>
+    <li>Use the <code>so_auth</code> gem in service apps</li>
+  </ol>
+</section>
+
+
 
 
         <section data-background="img/test_bean.jpg" data-state="title-slide">
@@ -316,6 +368,8 @@
 
         <section>
           <h1 class="smallest">Provider Implementation</h1>
+          <h3><a href="https://github.com/applicake/doorkeeper">applicake/doorkeeper</a></h3>
+          <img src="img/doorkeeper.png" alt="" class="no-border stretch"/>
           <aside class="notes">
             
           </aside>
@@ -329,9 +383,12 @@
 
 </code></pre>
 
-<pre><code>
+<pre class="fragment fade-in"><code>
   $ bundle install
 
+</code></pre>
+
+<pre class="fragment fade-in"><code>
   $ rails generate doorkeeper:install
       create  config/initializers/doorkeeper.rb
       create  config/locales/doorkeeper.en.yml
@@ -341,19 +398,52 @@
 
 
 </section>
+
+<section>
+<pre><code>
+$ rake routes | grep oauth
+                              GET        /oauth/authorize/:code(.:format)             doorkeeper/authorizations#show
+          oauth_authorization GET        /oauth/authorize(.:format)                   doorkeeper/authorizations#new
+                              POST       /oauth/authorize(.:format)                   doorkeeper/authorizations#create
+                              PATCH      /oauth/authorize(.:format)                   doorkeeper/authorizations#update
+                              PUT        /oauth/authorize(.:format)                   doorkeeper/authorizations#update
+                              DELETE     /oauth/authorize(.:format)                   doorkeeper/authorizations#destroy
+                  oauth_token POST       /oauth/token(.:format)                       doorkeeper/tokens#create
+           oauth_applications GET        /oauth/applications(.:format)                doorkeeper/applications#index
+                              POST       /oauth/applications(.:format)                doorkeeper/applications#create
+        new_oauth_application GET        /oauth/applications/new(.:format)            doorkeeper/applications#new
+       edit_oauth_application GET        /oauth/applications/:id/edit(.:format)       doorkeeper/applications#edit
+            oauth_application GET        /oauth/applications/:id(.:format)            doorkeeper/applications#show
+                              PATCH      /oauth/applications/:id(.:format)            doorkeeper/applications#update
+                              PUT        /oauth/applications/:id(.:format)            doorkeeper/applications#update
+                              DELETE     /oauth/applications/:id(.:format)            doorkeeper/applications#destroy
+oauth_authorized_applications GET        /oauth/authorized_applications(.:format)     doorkeeper/authorized_applications#index
+ oauth_authorized_application DELETE     /oauth/authorized_applications/:id(.:format) doorkeeper/authorized_applications#destroy
+             oauth_token_info GET        /oauth/token/info(.:format)                  doorkeeper/token_info#show
+
+</code></pre>
+</section>
+
+
 <section>
 <pre><code>
 $ rails generate doorkeeper:migration
       create  db/migrate/..._create_doorkeeper_tables.rb
 
+</code></pre>
+</section>
+<section>
+<pre><code>
 $ rake db:migrate
 ==  CreateDoorkeeperTables: migrating =========================================
+
 -- create_table(:oauth_applications)
    -> 0.0323s
 -- create_table(:oauth_access_grants)
    -> 0.0036s
 -- create_table(:oauth_access_tokens)
    -> 0.0031s
+
 -- add_index(:oauth_applications, :uid, {:unique=>true})
    -> 0.0039s
 -- add_index(:oauth_access_grants, :token, {:unique=>true})
@@ -365,33 +455,84 @@ $ rake db:migrate
 -- add_index(:oauth_access_tokens, :refresh_token, {:unique=>true})
    -> 0.0021s
 ==  CreateDoorkeeperTables: migrated (0.0504s) ================================
+
 </code></pre>
 </section>
 
 <section>
 <pre><code>
+  # config/initializers/doorkeeper.rb
   Doorkeeper.configure do
 
-    # This block will be called to check whether the resource owner is authenticated or not.
+    ...
+
+    # This block will be called to check whether the 
+    # resource owner is authenticated or not.
     resource_owner_authenticator do
       current_user || warden.authenticate!(:scope => :user)
       # User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
     end
 
-    # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
-    admin_authenticator do
-      current_admin_user || warden.authenticate!(:scope => :user)
-    end
+    ...
 
-    # For example if dealing with trusted a application.
-    skip_authorization do |resource_owner, client|
-      true
-      #client.superapp? or resource_owner.admin?
-    end
   end
 
 </code></pre>
 </section>
+
+
+
+
+<section>
+<pre><code>
+  # config/initializers/doorkeeper.rb
+  Doorkeeper.configure do
+
+    ...
+
+    # You want to restrict access to the web interface 
+    # for adding oauth authorized applications
+    admin_authenticator do
+      current_admin_user || warden.authenticate!(:scope => :user)
+    end
+
+    ...
+  
+  end
+
+</code></pre>
+</section>
+
+
+
+<section>
+<pre><code>
+  # config/initializers/doorkeeper.rb
+  Doorkeeper.configure do
+
+    ...
+
+    # We want to skip the 
+    # "can application X use you profile?" screen
+    skip_authorization do |resource_owner, client|
+      true
+      #client.superapp? or resource_owner.admin?
+    end
+
+    ...
+
+  end
+
+</code></pre>
+</section>
+
+
+
+
+
+
+
+
 
 <section>
 <pre><code>
@@ -485,6 +626,10 @@ $ rake db:migrate
             
           </aside>
         </section>
+
+<section>
+  Using token.get to call api endpoints on the main service
+</section>
 
 <section data-background="img/pritzger_planet.jpg" data-state="title-slide">
   <h1>Wrap Up</h1>
