@@ -131,7 +131,7 @@
           <h1>Introducing<br/>the Mc-SOA*</h1>
           <img src="img/Arch-Logo.png" alt="" class="no-border" style="max-height:200px;"/>
           <h2 class="fragment fade-in">Monolith Centric<br/>Service Oriented Architecture</h2>
-          <p>*Not affiliated with McDonalds Corp in any way.</p>
+          <p class="fragment fade-in">*Not affiliated with McDonalds Corp in any way.</p>
         </section>
 
         <section>
@@ -228,7 +228,7 @@
         </section>
 
 
-        <section data-background="img/chicago_public_library.jpg" data-state="title-slide">
+        <section data-background="img/roundy.jpg" data-state="title-slide">
           <h1 class="smallest">Service Oriented Authentication</h1>
           <aside class="notes">
             
@@ -359,7 +359,7 @@
 
 
 
-        <section data-background="img/test_bean.jpg" data-state="title-slide">
+        <section data-background="img/water_skyline.jpg" data-state="title-slide">
           <h1 class="smallest">Provider Implementation</h1>
           <aside class="notes">
             
@@ -613,7 +613,6 @@ $ rake db:migrate
 
 
 
-
 <section>
 <h2>Single sign off (Provider side)</h2>
 <pre><code>
@@ -699,7 +698,7 @@ $ rake db:migrate
 
 
 
-        <section data-background="img/pritzger_tunnel.jpg" data-state="title-slide">
+        <section data-background="img/bean_seam.jpg" data-state="title-slide">
           <h1 class="smallest">Client Implementation</h1>
           <aside class="notes">
             
@@ -928,37 +927,136 @@ $ rake db:migrate
 </section>
 
 
-
-
-
-
-
+        <section data-background="img/water_skyline_2.jpg" data-state="title-slide">
+          <h1 class="smallest"><code>so_auth</code> usage</h1>
+          <aside class="notes">
+            
+          </aside>
+        </section>
 
 <section>
-  <h2><code>so_auth</code> usage</h2>
+<h1 class="smallest"><code>so_auth</code> usage</h1>
+<br />
+<pre><code>
+  $ rails new so_auth_client -T --database=postgresql
+
+</code></pre>
+
+<pre class="fragment fade-in"><code class="ruby">
+  # Gemfile
+
+  # development
+  gem 'so_auth', path: "../so_auth"
+
+</code></pre>
+
+<pre class="fragment fade-in"><code class="ruby">
+  # 'yourcomp_auth' stable / production
+  gem 'yourcomp_auth', 
+    git: "https://your_token:x-oauth-basic@github.com/yourcomp/yourcomp_auth.git"
+
+</code></pre>
+<br />
+<p class="fragment fade-in">
+Installing a Gem on Heroku from a Private GitHub Repo<br/>
+<a href="https://gist.github.com/masonforest/4048732">https://gist.github.com/masonforest/4048732</a>
+</p>
+<aside class="notes">
+  
+</aside>
 </section>
 
 <section>
-  <h2><code>so_auth</code> installation</h2>
-  <p>GitHub token thingy?</p>
+<pre><code>
+  $ rails generate so_auth:install
+      create  config/initializers/omniauth.rb
+
+</code></pre>
+
+
+<pre><code class="ruby">
+  # If you need to pull the app_id and app_secret from a different spot
+  # this is the place to do it
+  APP_ID = ENV['AUTH_PROVIDER_APPLICATION_ID'] || "not_a_real_id"
+  APP_SECRET = ENV['AUTH_PROVIDER_SECRET'] || "not_a_real_secret"
+
+  Rails.application.config.middleware.use OmniAuth::Builder do
+    provider :so, APP_ID, APP_SECRET
+  end
+
+</code></pre>
 </section>
 
 
 <section>
-  <h2><code>so_auth</code> configuration</h2>
-  env vars
+  <h2>Register your new client with <code>so_auth_provider</code></h2>
+  <img src="img/doorkeeper_new_app.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
-  <img src="img/doorkeeper_new_app.png" alt="" class="no-border"/>
+  <h2>Take note of your<br/>Application Id and Secret</h2>
+  <img src="img/doorkeeper_app_info.png" alt="" class="no-border stretch"/>
 </section>
 
 <section>
-  <img src="img/doorkeeper_app_info.png" alt="" class="no-border"/>
+<h2>Set up some environment variables</h2>
+<pre><code>
+  AUTH_PROVIDER_URL=http://localhost:3000
+  AUTH_PROVIDER_APPLICATION_ID=1234
+  AUTH_PROVIDER_SECRET=5678
+
+</code></pre>
+</section>
+
+<section>
+<h2>Create a <code>User</code> model</h2>
+<pre><code>
+  $ rails generate model user email:string
+
+  $ rake db:migrate; rake db:test:prepare
+
+</code></pre>
+</section>
+
+<section>
+<h2>Update <code>ApplicationController</code></h2>
+<pre><code class="ruby">
+  class ApplicationController < SoAuth::ApplicationController
+    #...
+  end
+
+</code></pre>
+</section>
+
+<section>
+  <h2>Create and protect<br/>some content</h2>
+<pre><code class="ruby">
+  $ rails g controller stuff private public
+      create  app/controllers/stuff_controller.rb
+       route  get "stuff/public"
+       route  get "stuff/private"
+      invoke  erb
+      create    app/views/stuff
+      create    app/views/stuff/private.html.erb
+      create    app/views/stuff/public.html.erb
+
+</code></pre>
+<pre><code class="ruby">
+  class StuffController < ApplicationController
+    before_filter :login_required, :only => [:private]
+  end
+
+</code></pre>
+
 </section>
 
 
+<section>
+  <h2>Demo</h2>
+  <iframe src="http://so-auth-client.herokuapp.com/" frameborder="0" width="100%" height="900px"></iframe>
+</section>
 
+<!--
 <section>
   Using token.get to call api endpoints on the main service
 </section>
@@ -966,6 +1064,8 @@ $ rake db:migrate
 <section>
   Demo?
 </section>
+-->
+
 
 <section data-background="img/pritzger_planet.jpg" data-state="title-slide">
   <h1>Wrap Up</h1>
@@ -973,16 +1073,17 @@ $ rake db:migrate
 
 <section>
   <h1>Wrap Up</h1>
-  <ul>
-    <li>Understand your requirements</li>
-    <li>Set up an OAuth provider</li>
-    <li>Build services as OAuth clients</li>
-    <li>Enjoy your SOA!</li>
-  </ul>
+  <br />
+  <h2>First, understand your requirements.</h2>
 </section>
 
 <section>
   <h2>Start where you are</h2>
+  <img src="img/mc-soa-0.png" alt="" class="no-border"/>
+</section>
+
+<section>
+  <h2>Add an OAuth provider</h2>
   <img src="img/mc-soa-oauth-0.png" alt="" class="no-border"/>
 </section>
 
@@ -991,7 +1092,7 @@ $ rake db:migrate
   <img src="img/mc-soa-oauth-1.png" alt="" class="no-border"/>
 </section>
 
-<section data-background="img/test_bean.jpg" data-state="title-slide last-slide">
+<section data-background="img/autumn_bean.jpg" data-state="title-slide last-slide">
     <h1 class="smaller-yet">Thanks For Watching!</h1>
 
    <table border="0" class="vert-middle">
