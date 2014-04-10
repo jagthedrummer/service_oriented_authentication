@@ -716,12 +716,220 @@ $ rake db:migrate
         </section>
 
 <section>
-<h2>Create a rails engine</h2>
+<h2>Create a rails engine <code>so_auth</code></h2>
+<br />
 <pre><code class="bash">
   $ rails plugin new so_auth -T --dummy-path=spec/dummy --full
 
 </code></pre>
 </section>
+
+<section>
+<h3><code>so_auth</code> routes</h3>
+<br />
+<pre><code class="ruby">
+  # config/routes.rb
+  Rails.application.routes.draw do
+    # omniauth callbacks
+    get '/auth/:provider/callback', :to => 'so_auth/user_sessions#create'
+    get '/auth/failure', :to => 'so_auth/user_sessions#failure'
+
+    # Custom logout
+    post '/logout', :to => 'so_auth/user_sessions#destroy'
+  end
+
+</code></pre>
+</section>
+
+<section>
+<h3><code>so_auth</code> strategy for OAuth2</h3>
+<pre><code class="ruby">
+  # lib/omniauth/strategies/so.rb
+  require 'omniauth-oauth2'
+  class OmniAuth::Strategies::So < OmniAuth::Strategies::OAuth2
+
+    option :name, 'SoAuth'
+
+    option :client_options, {
+      :site =>  ENV['AUTH_PROVIDER_URL'],
+      :authorize_path => "/oauth/authorize",
+      :access_token_path => "/oauth/token"
+    }
+
+    def raw_user_info
+      @raw_user_info ||= access_token.get("/oauth/me").parsed
+    end
+
+    #...
+
+  end
+
+</code></pre>
+</section>
+
+
+<section>
+<h3><code>so_auth</code> strategy for OAuth2</h3>
+<pre><code class="ruby">
+  # lib/omniauth/strategies/so.rb
+  class OmniAuth::Strategies::So < OmniAuth::Strategies::OAuth2
+    #...
+
+    uid { raw_user_info['id'] }
+
+    info do
+      {
+        :email => raw_user_info['email'],
+        :admin => raw_user_info['admin']
+      }
+    end
+
+    extra do
+      { :raw_user_info => raw_user_info }
+    end
+  end
+
+</code></pre>
+</section>
+
+<section>
+<h3><code>so_auth</code> UserSessionsController</h3>
+<pre><code class="ruby">
+  class SoAuth::UserSessionsController < SoAuth::ApplicationController
+    # omniauth callback method
+    def create
+      omniauth = env['omniauth.auth']
+
+      user = User.find_by_id(omniauth['uid'])
+      if not user # New user registration
+        user = User.new
+        user.id = omniauth['uid']
+      end
+      user.email = omniauth['info']['email'] if user.respond_to?(:email)
+      user.save
+
+      session[:user_id] = user.id
+
+      flash[:notice] = "Successfully logged in"
+      redirect_to request.env['omniauth.origin'] || root_path
+    end
+    #...
+  end
+
+</code></pre>
+</section>
+
+
+
+
+<section>
+<h3><code>so_auth</code> UserSessionsController</h3>
+<pre><code class="ruby">
+  class SoAuth::UserSessionsController < SoAuth::ApplicationController
+    #...
+    # Omniauth failure callback
+    def failure
+      flash[:notice] = params[:message]
+      redirect_to root_path
+    end
+
+    # logout - Clear our rack session BUT essentially redirect to
+    # the provider to clean up the there too!
+    def destroy
+      reset_session
+      flash[:notice] = 'You have successfully signed out!'
+      redirect_to "#{ENV['AUTH_PROVIDER_URL']}/users/sign_out"
+    end
+  end
+
+</code></pre>
+</section>
+
+
+<section>
+<h3><code>so_auth</code> ApplicationController</h3>
+<pre><code class="ruby">
+  class SoAuth::ApplicationController < ActionController::Base
+
+    def current_user
+      return nil unless session[:user_id]
+      @current_user ||= User.find_by_id(session[:user_id])
+    end
+
+    def signed_in?
+      current_user.present?
+    end
+
+    helper_method :signed_in?
+    helper_method :current_user
+
+    #...
+
+  end
+
+</code></pre>
+</section>
+
+
+
+<section>
+<h3><code>so_auth</code> ApplicationController</h3>
+<pre><code class="ruby">
+  class SoAuth::ApplicationController < ActionController::Base
+
+    #...
+
+    def login_required # used as as before_filter
+      not_authorized unless current_user
+    end
+
+    def not_authorized
+      respond_to do |format|
+        format.html{ auth_redirect }
+        format.json{ head :unauthorized }
+      end
+    end
+
+    def auth_redirect
+      redirect_to "/auth/so?origin=#{request.protocol}#{request.host_with_port}#{request.fullpath}"
+    end
+  end
+
+</code></pre>
+</section>
+
+
+
+
+
+<section>
+<h3>Single Sign Off (Client side)</h3>
+<pre><code class="ruby">
+  class SoAuth::ApplicationController < ActionController::Base
+    
+    #...
+    
+    before_filter :check_cookie
+    def check_cookie
+      session[:user_id] = nil unless cookie_valid?
+    end
+
+    def cookie_valid?
+      cookies[:so_auth].present? && 
+        session[:user_id].present? && 
+        cookies[:so_auth].to_s == session[:user_id].to_s
+    end
+    
+    #...
+
+  end
+
+</code></pre>
+</section>
+
+
+
+
 
 
 
