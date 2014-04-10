@@ -15,7 +15,7 @@ html.intro{
 html.intro h1, html.title-slide h1{
   text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
   border-bottom:0;
-  background-color:rgba(255,255,255,0.5);
+  background-color:rgba(255,255,255,0.75);
   display:inline-block;
   padding-left:0.1em;
   padding-right:0.1em;
@@ -88,13 +88,12 @@ html.last-slide table{
   float:right;
 }
 html.last-slide table p{
-  background: rgba(255,255,255,0.5);
-  padding-left:0.1em;
-  padding-right:0.1em;
+  background: rgba(255,255,255,0.75);
+  padding: 0.1em 0.2em;
 }
 
 html.last-slide table img{
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.75);
 }
 
 .reveal pre code{
