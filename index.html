@@ -394,6 +394,25 @@ REORG START
 
 ###########################-->
 
+<section>
+<h1 class="smallest">The first request/response</h1>
+<br />
+<table border="0">
+  <tr>
+    <td width="49%">
+      <p><code>GET /protected <br />&nbsp;</code></p>
+      <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border "/>
+    </td>
+    <td width="49%">
+      <p><code>Redirect <br/>#{provider}/...</code></p>
+      <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border "/>
+    </td>
+  </tr>
+</table>
+</section>
+
+
+
         <section data-background="img/bean_seam.jpg" data-state="title-slide">
           <h1 class="smallest">Client Implementation - Part 1</h1>
           <aside class="notes">
@@ -423,22 +442,7 @@ REORG START
 </section>
 
 
-<section>
-<h1 class="smallest">The first request/response</h1>
-<br />
-<table border="0">
-  <tr>
-    <td width="49%">
-      <p><code>GET /protected <br />&nbsp;</code></p>
-      <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border "/>
-    </td>
-    <td width="49%">
-      <p><code>Redirect <br/>#{provider}/...</code></p>
-      <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border "/>
-    </td>
-  </tr>
-</table>
-</section>
+
 
 <section>
 <h3>Update <code>so_auth.gemspec</code></h3>
@@ -501,6 +505,7 @@ REORG START
 <h2>Protect some content</h2>
 
 <pre><code class="ruby">
+  # spec/dummy/app/controllers/stuff_controller.rb
   class StuffController < ApplicationController
     before_filter :login_required, :only => [:private]
   end
@@ -508,14 +513,16 @@ REORG START
 </code></pre>
 
 <br />
-
-<h2>Update the dummy <code>ApplicationController</code></h2>
+<div class="fragment fade-in">
+<h2>Update <code>ApplicationController</code></h2>
 <pre><code class="ruby">
+  # spec/dummy/app/controllers/application_controller.rb
   class ApplicationController < SoAuth::ApplicationController
     #...
   end
 
 </code></pre>
+</div>
 </section>
 
 <section>
@@ -529,13 +536,13 @@ REORG START
 
     def not_authorized
       respond_to do |format|
-        format.html{ auth_redirect }
-        format.json{ head :unauthorized }
+        format.html{
+          redirect_to "/auth/so?origin=#{request.original_url}"
+        }
+        format.json{
+          head :unauthorized
+        }
       end
-    end
-
-    def auth_redirect
-      redirect_to "/auth/so?origin=#{request.original_url}"
     end
 
   end
@@ -545,7 +552,22 @@ REORG START
 
 
 
-
+<section>
+<h1 class="smallest">The next request/response</h1>
+<br />
+<table border="0">
+  <tr>
+    <td width="49%">
+      <p><code>GET <br/>#{provider}/auth... <br /></code></p>
+      <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border "/>
+    </td>
+    <td width="49%">
+      <p><code>Redirect<br/>#{client}/callback...</code></p>
+      <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
+    </td>
+  </tr>
+</table>
+</section>
 
 
 
@@ -560,7 +582,11 @@ REORG START
           </aside>
         </section>
 
-
+<section>
+  <h1 class="smallest">Provider Implementation</h1>
+  <br /><br />
+  <h2>Install and configure <code>doorkeeper</code></h2>
+</section>
 
 <section>
   <h2><code>doorkeeper</code> installation</h2>
@@ -583,9 +609,16 @@ REORG START
 
 </code></pre>
 
+<pre class="fragment fade-in"><code class="bash">
+  $ rails generate doorkeeper:migration
+      create  db/migrate/..._create_doorkeeper_tables.rb
+
+</code></pre>
+
 
 </section>
 
+<!--
 <section>
 <h2><code>doorkeeper</code> installation</h2>
 <pre><code>
@@ -629,27 +662,29 @@ $ rails generate doorkeeper:migration
 $ rake db:migrate
 ==  CreateDoorkeeperTables: migrating =========================================
 
--- create_table(:oauth_applications)
+- - create_table(:oauth_applications)
    -> 0.0323s
--- create_table(:oauth_access_grants)
+- - create_table(:oauth_access_grants)
    -> 0.0036s
--- create_table(:oauth_access_tokens)
+- - create_table(:oauth_access_tokens)
    -> 0.0031s
 
--- add_index(:oauth_applications, :uid, {:unique=>true})
+- - add_index(:oauth_applications, :uid, {:unique=>true})
    -> 0.0039s
--- add_index(:oauth_access_grants, :token, {:unique=>true})
+- - add_index(:oauth_access_grants, :token, {:unique=>true})
    -> 0.0015s
--- add_index(:oauth_access_tokens, :token, {:unique=>true})
+- - add_index(:oauth_access_tokens, :token, {:unique=>true})
    -> 0.0017s
--- add_index(:oauth_access_tokens, :resource_owner_id)
+- - add_index(:oauth_access_tokens, :resource_owner_id)
    -> 0.0017s
--- add_index(:oauth_access_tokens, :refresh_token, {:unique=>true})
+- - add_index(:oauth_access_tokens, :refresh_token, {:unique=>true})
    -> 0.0021s
 ==  CreateDoorkeeperTables: migrated (0.0504s) ================================
 
 </code></pre>
 </section>
+
+-->
 
 <section>
 <h2><code>doorkeeper</code> configuration</h2>
@@ -836,7 +871,7 @@ $ rake db:migrate
 <pre><code class="ruby">
   # oauth/users_controller.rb
   class Oauth::UsersController < ApplicationController
-    doorkeeper_for :all
+    doorkeeper_for :all # sets doorkeeper_token or sends 401 error
     respond_to     :json
 
     # GET /me.json
@@ -866,6 +901,24 @@ $ rake db:migrate
   }
 
 </code></pre>
+</section>
+
+
+<section>
+<h1 class="smallest">Nearly done!</h1>
+<br />
+<table border="0">
+  <tr>
+    <td width="49%">
+      <p><code>so_auth<br/>{name:...}</code></p>
+      <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border "/>
+    </td>
+    <td width="49%">
+      <p><code>???<br/> Redirect /protected</code></p>
+      <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
+    </td>
+  </tr>
+</table>
 </section>
 
 
@@ -947,8 +1000,33 @@ $ rake db:migrate
 </code></pre>
 </section>
 
+<section>
+<h3><code>so_auth</code> UserSessionsController</h3>
+<pre><code class="ruby">
+  class SoAuth::UserSessionsController < SoAuth::ApplicationController
+    # omniauth callback method
+    def create
+      omniauth = env['omniauth.auth']
+
+      user = User.find_or_create_by(:id => omniauth['uid'])
+      if user.respond_to?(:email)
+        user.email = omniauth['info']['email']
+      end
+      user.save
+
+      session[:user_id] = user.id
+
+      flash[:notice] = "Successfully logged in"
+      redirect_to request.env['omniauth.origin'] || root_path
+    end
+    #...
+  end
+
+</code></pre>
+</section>
 
 
+<!--
 <section>
 <h3><code>so_auth</code> UserSessionsController</h3>
 <pre><code class="ruby">
@@ -975,7 +1053,7 @@ $ rake db:migrate
 
 </code></pre>
 </section>
-
+-->
 
 
 <section>
