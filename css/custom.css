@@ -36,6 +36,10 @@ html.intro .reveal .slides{
 }
 
 
+html.code.client body .reveal{
+  background:#fee;
+}
+
 .reveal .slides>section{
   top:-60%;
 }

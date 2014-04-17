@@ -139,11 +139,13 @@
 
         <section>
           <h1>Outline</h1>
+          <br />
           <ol start="0">
             <li class="fragment fade-in">Context, Goals &amp; Requirements</li>
+            <br />
             <li>Introduction to SOAuth</li>
+            <br />
             <li>Implementation</li>
-            <li>Clean Up for Reuse</li>
           </ol>
         </section>
 
@@ -430,7 +432,7 @@ REORG START
 </section>
 
 
-<section>
+<section data-state="">
 <h1 class="smallest">Client Implementation - Part 1</h1>
 <br /><br />
 <h3>Create a rails engine called <code>so_auth</code></h3>
@@ -754,6 +756,33 @@ $ rake db:migrate
 
 </code></pre>
 </section>
+
+<section>
+  <h2>OAuth application authorization</h2>
+  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
+  <h2>Get rid of it!</h2>
+</section>
+
+
+<section>
+<h2><code>doorkeeper</code> configuration</h2>
+<pre><code class="ruby">
+  # config/initializers/doorkeeper.rb
+  Doorkeeper.configure do
+
+    # We want to skip the screen that asks
+    # "can application X use your profile?"
+    skip_authorization do |resource_owner, client|
+      true
+    end
+
+    #...
+
+  end
+
+</code></pre>
+</section>
+
 
 
 
@@ -1104,13 +1133,13 @@ $ rake db:migrate
 
 
 <section>
-<h1 class="smallest">Hooray gems!</h1>
+<h1 class="smallest">Hooray gems! And <code>so_auth</code>!</h1>
 <br />
 <table border="0">
   <tr>
     <td width="25%">&nbsp;</td>
     <td width="49%">
-      <p><code>omniauth <br/> Redirect /protected</code></p>
+      <p><code>omniauth/so_auth<br/> Redirect /protected</code></p>
       <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
     </td>
     <td width="25%">&nbsp;</td>
@@ -1120,6 +1149,40 @@ $ rake db:migrate
 
 
 
+
+        <section data-background="img/water_skyline_2.jpg" data-state="title-slide">
+          <h1 class="smaller">Single sign off</h1>
+          <aside class="notes">
+            
+          </aside>
+        </section>
+
+
+<section>
+<h2>Single sign off (Provider side)</h2>
+<pre><code class="ruby">
+  class Oauth::SessionsController < Devise::SessionsController
+
+    def set_user_cookie(user)
+      cookies[:so_auth] = { :value => user.id, 
+                            :domain => env_domain }
+    end
+
+    def remove_user_cookie
+      cookies.delete(:so_auth, :domain => env_domain)
+    end
+
+    def env_domain
+      domain = ENV['COOKIE_DOMAIN'] || "localhost"
+      domain == "localhost" ? :all : domain
+    end
+
+    #...
+
+  end
+
+</code></pre>
+</section>
 
 
 <section>
@@ -1169,31 +1232,7 @@ $ rake db:migrate
 
 
 
-<section>
-<h2>Single sign off (Provider side)</h2>
-<pre><code class="ruby">
-  class Oauth::SessionsController < Devise::SessionsController
 
-    #...
-
-    def env_domain
-      domain = ENV['COOKIE_DOMAIN'] || "localhost"
-      domain == "localhost" ? :all : domain
-    end
-
-    def set_user_cookie(user)
-      cookies[:so_auth] = { :value => user.id, 
-                            :domain => env_domain }
-    end
-
-    def remove_user_cookie
-      cookies.delete(:so_auth, :domain => env_domain)
-    end
-
-  end
-
-</code></pre>
-</section>
 
 
 
@@ -1434,6 +1473,17 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
   $ rake db:migrate; rake db:test:prepare
 
 </code></pre>
+
+<br />
+<h2>Protect some content</h2>
+
+<pre><code class="ruby">
+  # spec/dummy/app/controllers/stuff_controller.rb
+  class StuffController < ApplicationController
+    before_filter :login_required, :only => [:private]
+  end
+
+</code></pre>
 </section>
 
 
@@ -1450,6 +1500,8 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 </section>
 
 
+
+<!--
 <section>
   <h2><code>doorkeeper</code> clean up</h2>
 </section>
@@ -1482,33 +1534,8 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 </code></pre>
 </section>
+-->
 
-
-<section>
-  <h2>OAuth application authorization</h2>
-  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
-  <h2>Get rid of it!</h2>
-</section>
-
-
-<section>
-<h2><code>doorkeeper</code> configuration</h2>
-<pre><code class="ruby">
-  # config/initializers/doorkeeper.rb
-  Doorkeeper.configure do
-
-    # We want to skip the screen that asks
-    # "can application X use you profile?"
-    skip_authorization do |resource_owner, client|
-      true
-    end
-
-    #...
-
-  end
-
-</code></pre>
-</section>
 
 
 
@@ -1538,7 +1565,7 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 <section>
   <h2>Start where you are</h2>
-  <img src="img/mc-soa-0.png" alt="" class="no-border"/>
+  <img src="img/mc-soa-0.png" alt="" class="no-border fragment fade-in"/>
 </section>
 
 <section>
