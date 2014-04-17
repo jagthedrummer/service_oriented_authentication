@@ -1,0 +1,16 @@
+Bigger font on regular text.
+
+Better context for code slides.
+
+So-Authsome! slide
+
+Double headed tree slide (FB/Twitter/Github -> Provider ->
+Consumer1/Consumer2)
+
+Consumer apps larger on monolith screens.
+
+Demo at the end is WAAAAY too small.
+
+NOT connecting to FB, just an example.  Show GH and Twitter.
+
+
