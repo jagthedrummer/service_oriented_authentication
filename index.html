@@ -278,13 +278,13 @@
 </section>
 
 <section>
-  <p><code>Redirect #{client}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
+  <p><code>Redirect #{consumer}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
 </section>
 
 
 <section>
-  <p><code>GET #{client}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
+  <p><code>GET #{consumer}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border "/>
 </section>
 
@@ -359,7 +359,7 @@
 </section>
 
 <section>
-  <h1 class="smallest">Client Implementation</h1>
+  <h1 class="smallest">Consumer Implementation</h1>
   <h3><a href="https://github.com/intridea/omniauth">intridea/omniauth</a></h3>
   <img src="img/omniauth.png" alt="" class="no-border"/>
   <aside class="notes">
@@ -417,21 +417,21 @@ REORG START
 
 
         <section data-background="img/bean_seam.jpg" data-state="title-slide">
-          <h1 class="smallest">Client Implementation - Part 1</h1>
+          <h1 class="smallest">Consumer Implementation - Part 1</h1>
           <aside class="notes">
             
           </aside>
         </section>
 
 <section>
-<h1 class="smallest">Client Implementation - Part 1</h1>
+<h1 class="smallest">Consumer Implementation - Part 1</h1>
 <br />
 <h2>Entering the OAuth Dance</h2>
 </section>
 
 
 <section data-state="">
-<h1 class="smallest">Client Implementation - Part 1</h1>
+<h1 class="smallest">Consumer Implementation - Part 1</h1>
 <br /><br />
 <h3>Create a rails engine called <code>so_auth</code></h3>
 <br />
@@ -586,7 +586,7 @@ REORG START
       <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border "/>
     </td>
     <td width="49%">
-      <p><code>Redirect<br/>#{client}/callback...</code></p>
+      <p><code>Redirect<br/>#{consumer}/callback...</code></p>
       <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
     </td>
   </tr>
@@ -757,8 +757,8 @@ $ rake db:migrate
 
 <section>
   <h2>OAuth application authorization</h2>
-  <img src="img/doorkeeper_authorize.png" alt="" class="no-border stretch"/>
   <h2>Get rid of it!</h2>
+  <img src="img/doorkeeper_authorize.png" alt="" class="no-border"/>
 </section>
 
 
@@ -810,7 +810,7 @@ $ rake db:migrate
   <tr>
     <td width="25%">&nbsp;</td>
     <td width="49%">
-      <p><code>GET #{client}/callback...</code></p>
+      <p><code>GET #{consumer}/callback...</code></p>
       <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border "/>
     </td>
     <td width="25%">&nbsp;</td>
@@ -856,7 +856,7 @@ $ rake db:migrate
 
 
 <section>
-<h2>Pass user info to the client</h2>
+<h2>Pass user info to the consumer</h2>
 <pre><code>
   # config/routes.rb
   SoAuthProvider::Application.routes.draw do
@@ -877,7 +877,7 @@ $ rake db:migrate
 
 
 <section>
-<h2>Pass user info to the client</h2>
+<h2>Pass user info to the consumer</h2>
 <pre><code class="ruby">
   # oauth/users_controller.rb
   class Oauth::UsersController < ApplicationController
@@ -902,7 +902,7 @@ $ rake db:migrate
 
 <!--
 <section>
-<h2>Pass user info to the client</h2>
+<h2>Pass user info to the consumer</h2>
 <pre><code class="json">
   {
     "id" : 1,
@@ -934,7 +934,7 @@ $ rake db:migrate
 
 
         <section data-background="img/bean_seam.jpg" data-state="title-slide">
-          <h1 class="smallest">Client Implementation - Part 2</h1>
+          <h1 class="smallest">Consumer Implementation - Part 2</h1>
           <aside class="notes">
             
           </aside>
@@ -943,7 +943,7 @@ $ rake db:migrate
 
 
 <section>
-  <h1 class="smallest">Client Implementation - Part 2</h1>
+  <h1 class="smallest">Consumer Implementation - Part 2</h1>
   <br />
   <h2>Exiting the OAuth Dance</h2>
 
@@ -1235,7 +1235,7 @@ $ rake db:migrate
 
 
 <section>
-<h2>Single Sign Off (Client side)</h2>
+<h2>Single Sign Off (Consumer side)</h2>
 <pre><code class="ruby">
   class SoAuth::ApplicationController < ActionController::Base
     
@@ -1262,7 +1262,7 @@ $ rake db:migrate
 
 
 <section>
-<h2>Single Sign Off (Client side)</h2>
+<h2>Single Sign Off (Consumer side)</h2>
 <br />
 <pre><code class="ruby">
   # config/routes.rb
@@ -1281,7 +1281,7 @@ $ rake db:migrate
 
 
 <section>
-<h2>Single Sign Off (Client side)</h2>
+<h2>Single Sign Off (Consumer side)</h2>
 <pre><code class="ruby">
   class SoAuth::UserSessionsController < SoAuth::ApplicationController
     #...
@@ -1311,7 +1311,7 @@ $ rake db:migrate
 
 <!--
         <section>
-          <h1 class="smallest">Client Implementation - Part ?</h1>
+          <h1 class="smallest">Consumer Implementation - Part ?</h1>
           <br />
           <h3>Internal Convenience Methods</h3>
           <ul>
@@ -1334,7 +1334,7 @@ $ rake db:migrate
 <!-- Provider Impl -->
 
 
-<!-- Client Impl - Part 2 -->
+<!-- Consumer Impl - Part 2 -->
 
 
 
@@ -1392,7 +1392,7 @@ REORG END
 <section>
 <h1 class="smallest"><code>so_auth</code> usage</h1>
 <pre><code>
-  $ rails new so_auth_client -T --database=postgresql
+  $ rails new so_auth_consumer -T --database=postgresql
 
 </code></pre>
 
@@ -1403,6 +1403,17 @@ REORG END
   gem 'so_auth', path: "../so_auth"
 
 </code></pre>
+
+<pre class="fragment fade-in"><code class="ruby">
+  # for deployment
+  gem 'vendorise', group: :development
+
+  # rake "vendorise:gem[git@github.com:jagthedrummer/so_auth.git]"
+  gem 'so_auth', path: "vendor/gems/so_auth"
+
+</code></pre>
+
+<!--
 <h3>Add vendorise here!</h3>
 <pre class="fragment fade-in"><code class="ruby">
   # 'yourcomp_auth' stable / production
@@ -1415,6 +1426,7 @@ REORG END
 Installing a Gem on Heroku from a Private GitHub Repo<br/>
 <a href="https://gist.github.com/masonforest/4048732">https://gist.github.com/masonforest/4048732</a>
 </p>
+-->
 <aside class="notes">
   
 </aside>
@@ -1443,7 +1455,7 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 
 <section>
-  <h2>Register your new client with <code>so_auth_provider</code></h2>
+  <h2>Register your new consumer with <code>so_auth_provider</code></h2>
   <img src="img/doorkeeper_new_app.png" alt="" class="no-border "/>
 </section>
 
@@ -1491,8 +1503,8 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 <section>
   <h2>Repos/Demo</h2>
   <p><a href="https://github.com/jagthedrummer/so_auth_provider">https://github.com/jagthedrummer/so_auth_provider</a></p>
-  <p><a href="https://github.com/jagthedrummer/so_auth_provider">https://github.com/jagthedrummer/so_auth</a></p>
-  <p><a href="https://github.com/jagthedrummer/so_auth_provider">https://github.com/jagthedrummer/so_auth_client</a></p>
+  <p><a href="https://github.com/jagthedrummer/so_auth">https://github.com/jagthedrummer/so_auth</a></p>
+  <p><a href="https://github.com/jagthedrummer/so_auth_client">https://github.com/jagthedrummer/so_auth_client</a></p>
   <iframe src="http://so-auth-client.octolabs.com/" frameborder="0" width="100%" height="500px"></iframe>
 </section>
 
