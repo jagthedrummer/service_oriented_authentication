@@ -42,7 +42,6 @@ html.code.client body .reveal{
 
 .reveal .slides>section{
   top:-60%;
-  border:1px solid red;
 }
 
 
@@ -113,4 +112,9 @@ html.last-slide table img{
 
 pre .comment{
   color:#ccc;
+}
+
+.larger{
+  font-size:1.5em !important;
+  line-height:1.55em !important;
 }

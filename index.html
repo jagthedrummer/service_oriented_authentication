@@ -140,7 +140,7 @@
         <section>
           <h1>Outline</h1>
           <br />
-          <ol start="0">
+          <ol start="0" class="larger">
             <li class="fragment fade-in">Context, Goals &amp; Requirements</li>
             <br />
             <li>Introduction to SOAuth</li>
@@ -220,10 +220,10 @@
 
         <section>
           <h1>Goals &amp; Reqs</h1>
-          <ul>
-            <li>Small focused apps</li>
-            <li class="fragment fade-in">Single sign on/off</li>
-            <li class="fragment fade-in">Minimize code duplication</li>
+          <ul class="larger">
+            <li>Small focused apps <br /></li>
+            <li class="fragment fade-in">Single sign on/off <br /></li>
+            <li class="fragment fade-in">Minimize code duplication <br /></li>
             <li class="fragment fade-in">Support a variety of app/service types</li>
           </ul>
         </section>
@@ -258,7 +258,7 @@
         </section>
 
 <section>
-  <p>Just a web client <br />&nbsp;</p>
+  <p><code>Just a web client <br />&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_1_0.png" alt="" class="no-border "/>
 </section>
 
@@ -278,23 +278,23 @@
 </section>
 
 <section>
-  <p><code>Redirect #{client}/callback?code=abc&state=yyz&response_type=code</code></p>
+  <p><code>Redirect #{client}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
 </section>
 
 
 <section>
-  <p><code>GET #{client}/callback?code=abc&state=yyz&response_type=code</code></p>
+  <p><code>GET #{client}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
   <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border "/>
 </section>
 
 <section>
-  <p><code>POST /oauth/token?client_id=123&client_secret=456&code=abc</code></p>
+  <p><code>POST /oauth/token?<br/>client_id=123&client_secret=456&code=abc</code></p>
   <img src="img/rails_auth_flow_redirects_2_1.png" alt="" class="no-border "/>
 </section>
 
 <section>
-  <p><code>{token:'42ab', refresh_token:'9876', uid:'jag'}</code></p>
+  <p><code>{token:'42ab', refresh_token:'9876', uid:'jag'}<br/>&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_2_2.png" alt="" class="no-border "/>
 </section>
 
@@ -304,7 +304,7 @@
 </section>
 
 <section>
-  <p><code>{id:111, name:"Jeremy Green", email:"jeremy@octolabs.com"}</code></p>
+  <p><code>{id:111, name:"Jeremy Green", <br/>email:"jeremy@octolabs.com"}</code></p>
   <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border "/>
 </section>
 
@@ -370,11 +370,9 @@
 
 <section>
   <h1>The Plan</h1>
-  <br /><br />
-  <ol>
-    <li>Add <code>doorkeeper</code> <br/>to an existing Devise app<br/><br/></li>
-    <li>Create a <code>so_auth</code> gem that wraps<br/><code>omniauth</code> and knows how to delegate 
-      <br/>authentication to the provider<br /><br />
+  <ol class="larger">
+    <li>Add <code>doorkeeper</code> to an existing Devise app<br/><br/></li>
+    <li>Create a <code>so_auth</code> gem that wraps <code>omniauth</code><br/>and delegates to the provider<br /><br />
     </li>
 
     <li>Use <code>so_auth</code> in service apps</li>
