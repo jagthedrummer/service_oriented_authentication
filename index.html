@@ -91,7 +91,13 @@
         </section>
 
         <section>
-          <h2>A collection of services</h2>
+          <h1>OAuth(2)</h1>
+          <img src="img/OAuth2.png" alt="" class="no-border stretch"/>
+          <h4>An open standard for delegated authorization</h4>
+        </section>
+
+        <section>
+          <h2>Now a collection of services</h2>
           <img src="img/cloudhdr.png" alt="CloudHDR Structure"  class="no-border"/>
           <aside class="notes">
             I know what you're thinking.
@@ -108,14 +114,21 @@
           </aside>
         </section>
 
+        
+
         <section>
           <h2>Start where you are</h2>
           <img src="img/mc-soa-0.png" alt="" class="no-border "/>
         </section>
 
         <section>
+          <h2>Add an OAuth provider</h2>
+          <img src="img/mc-soa-oauth-0.png" alt="" class="no-border"/>
+        </section>
+
+        <section>
           <h2>Add one service</h2>
-          <img src="img/mc-soa-1.png" alt="" class="no-border "/>
+          <img src="img/mc-soa-oauth-1.png" alt="" class="no-border "/>
         </section>
 
         <!--
@@ -134,6 +147,7 @@
           <h1 class="smaller">Introducing the Mc-SOA*</h1>
           <img src="img/Arch-Logo.png" alt="" class="no-border" style="max-height:200px;"/>
           <h2 class="fragment fade-in">Monolith Centric<br/>Service Oriented Architecture</h2>
+          <br/>
           <p class="fragment fade-in">*Not affiliated with McDonalds Corp in any way.</p>
         </section>
 
@@ -142,9 +156,7 @@
           <br />
           <ol start="0" class="larger">
             <li class="fragment fade-in">Context, Goals &amp; Requirements</li>
-            <br />
             <li>Introduction to SOAuth</li>
-            <br />
             <li>Implementation</li>
           </ol>
         </section>
@@ -168,7 +180,7 @@
       </td>
     </tr>
     <tr class="">
-      <td>
+      <td width="18%">
         <img src="img/octologo.png" class="no-border">
       </td>
       <td>
@@ -230,27 +242,27 @@
 
 
         <section data-background="img/roundy.jpg" data-state="title-slide">
-          <h1 class="smallest">Service Oriented Authentication</h1>
+          <h1>OAuth(2)</h1>
           <aside class="notes">
             
           </aside>
         </section>
 
-        <section>
-          <h1 class="smallest">Service Oriented Authentication</h1>
-          <p>&nbsp;</p>
-          <img src="img/LoginWithFacebook.png" alt="" class="no-border stretch"/>
-          <aside class="notes">
-            
-          </aside>
-        </section>
-
+        
 
         <section>
           <h1>OAuth(2)</h1>
-          <img src="img/OAuth2.png" alt="" class="no-border stretch"/>
-          <h4>An open standard for delegated authorization</h4>
+          <p>&nbsp;</p>
+          <img src="img/LoginWithFacebook.png" alt="" class="no-border "/>
+          <img src="img/twitter.png" alt="" class="no-border " style="width:45%;"/>
+          <img src="img/octocat.png" alt="" class="no-border " style="width:45%;"/>
+          <aside class="notes">
+            
+          </aside>
         </section>
+
+
+        
 
         <section>
           <h1>A Brief Intro</h1>
@@ -406,7 +418,7 @@ REORG START
       <p><code>GET /protected <br />&nbsp;</code></p>
       <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>Redirect <br/>#{provider}/...</code></p>
       <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border "/>
     </td>
@@ -1209,15 +1221,11 @@ $ rake db:migrate
   class Oauth::SessionsController < Devise::SessionsController
 
     def create
-      super do |resource|
-        set_user_cookie(resource)
-      end
+      super {|resource| set_user_cookie(resource) }
     end
 
     def destroy
-      super do |resource|
-        remove_user_cookie
-      end
+      super {|resource| remove_user_cookie }
     end
 
     #...
@@ -1238,8 +1246,6 @@ $ rake db:migrate
 <h2>Single Sign Off (Consumer side)</h2>
 <pre><code class="ruby">
   class SoAuth::ApplicationController < ActionController::Base
-    
-    #...
     
     before_filter :check_cookie
     def check_cookie
@@ -1497,15 +1503,19 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 
 
+<section>
+  <h2>Demo</h2>
+  <iframe src="http://so-auth-client.octolabs.com/" frameborder="0" width="100%" height="500px"></iframe>
+</section>
+
 
 
 
 <section>
-  <h2>Repos/Demo</h2>
+  <h2>Repos</h2>
   <p><a href="https://github.com/jagthedrummer/so_auth_provider">https://github.com/jagthedrummer/so_auth_provider</a></p>
   <p><a href="https://github.com/jagthedrummer/so_auth">https://github.com/jagthedrummer/so_auth</a></p>
   <p><a href="https://github.com/jagthedrummer/so_auth_client">https://github.com/jagthedrummer/so_auth_client</a></p>
-  <iframe src="http://so-auth-client.octolabs.com/" frameborder="0" width="100%" height="500px"></iframe>
 </section>
 
 
@@ -1606,6 +1616,36 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
     
 </section>
 				
+
+<section>
+  <h2>SOAuth &amp; Login with _____</h2>
+  <img src="img/double_tree.png" alt="" class="no-border "/>
+</section>
+
+
+<section>
+  <h2>The plan</h2>
+  <img src="img/so_auth_plan_0.png" alt="" class="no-border "/>
+</section>
+
+<section>
+  <h2>The plan</h2>
+  <img src="img/so_auth_plan_1.png" alt="" class="no-border "/>
+</section>
+
+<section>
+  <h2>The plan</h2>
+  <img src="img/so_auth_plan_2.png" alt="" class="no-border "/>
+</section>
+
+<section>
+  <h2>The plan</h2>
+  <img src="img/so_auth_plan_3.png" alt="" class="no-border "/>
+</section>
+
+
+
+
 			</div>
 
 		</div>
