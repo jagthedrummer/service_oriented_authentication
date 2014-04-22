@@ -67,6 +67,11 @@
             <h3>Stumbling towards SOA</h3>
             <h3>The story of CloudHDR</h3>
           </div-->
+          <aside class="notes">
+            Login system exert more gravitational pull on apps than any other component.
+            OR
+            The gravitaional pull of login systems is the leading contributor to the formation of monoliths.
+          </aside>
         </section>
 
         <section>
@@ -91,7 +96,7 @@
         </section>
 
         <section>
-          <h1>OAuth(2)</h1>
+          <h1>OAuth2</h1>
           <img src="img/OAuth2.png" alt="" class="no-border stretch"/>
           <h4>An open standard for delegated authorization</h4>
         </section>
@@ -110,7 +115,6 @@
           <p>&nbsp;</p>
           <img src="img/babysteps.jpg" alt="" class="no-border stretch fragment"/>
           <aside class="notes">
-            Things are starting to get slightly less jumbled.
           </aside>
         </section>
 
@@ -194,10 +198,6 @@
     These items are in chronological order.<br />
     I've been drumming much more than half my life.<br />
     Coding, just about half.<br />
-    * next fragment * <br />
-    Thanks to Jesse and Vance of okcjs for organizing Thunder Plains.
-    * next fragment * <br />
-    I'm historically bad at Twitter, but trying to get better.<br />
     Contacting me through OctoLabs is more reliable.
   </aside>
 </section>
@@ -242,7 +242,7 @@
 
 
         <section data-background="img/roundy.jpg" data-state="title-slide">
-          <h1>OAuth(2)</h1>
+          <h1>OAuth2</h1>
           <aside class="notes">
             
           </aside>
@@ -251,7 +251,7 @@
         
 
         <section>
-          <h1>OAuth(2)</h1>
+          <h1>OAuth2</h1>
           <p>&nbsp;</p>
           <img src="img/LoginWithFacebook.png" alt="" class="no-border "/>
           <img src="img/twitter.png" alt="" class="no-border " style="width:45%;"/>
@@ -262,11 +262,14 @@
         </section>
 
 
-        
+        <section>
+          <h2>Demo</h2>
+          <iframe src="http://so-auth-client.octolabs.com/" frameborder="0" width="100%" height="500px"></iframe>
+        </section>
 
         <section>
-          <h1>A Brief Intro</h1>
-          <h2>Or Review</h2>
+          <h1>A Brief Intro to OAuth2</h1>
+          <h2>Or Maybe it's Review</h2>
         </section>
 
 <section>
@@ -324,9 +327,6 @@
   <p><code>Redirect /protected <br />&nbsp;</code></p>
   <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
   <aside class="notes">
-    The request sequence looks something like this.  OK, not really.  I'll be speaking
-    at RailsConf next month about Service Oriented Authentication, which will go into more depth
-    about this part.
   </aside>
 </section>
 
@@ -358,7 +358,7 @@
 
 <section>
   <h2>RubyGems.org to the rescue!</h2>
-  <img src="img/rubygems.png" alt="" class="no-border "/>
+  <img src="img/rubygems2.png" alt="" class="no-border "/>
 </section>
 
 <section>
@@ -575,9 +575,7 @@ REORG START
         format.html{
           redirect_to "/auth/so?origin=#{request.original_url}"
         }
-        format.json{
-          head :unauthorized
-        }
+        format.json{ head :unauthorized }
       end
     end
 
@@ -597,7 +595,7 @@ REORG START
       <p><code>GET <br/>#{provider}/auth... <br /></code></p>
       <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>Redirect<br/>#{consumer}/callback...</code></p>
       <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
     </td>
@@ -805,7 +803,7 @@ $ rake db:migrate
       <p><code>GET <br/>#{provider}/auth... <br /></code></p>
       <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>doorkeeper<br/>Redirect</code></p>
       <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
     </td>
@@ -840,7 +838,7 @@ $ rake db:migrate
       <p><code>omniauth</code><br/>POST /oauth/token...</p>
       <img src="img/rails_auth_flow_redirects_2_1.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>doorkeeper<br/>{token:...}</code></p>
       <img src="img/rails_auth_flow_redirects_2_2.png" alt="" class="no-border "/>
     </td>
@@ -858,7 +856,7 @@ $ rake db:migrate
       <p><code>omniauth/so_auth<br/>GET /me.json...</code></p>
       <img src="img/rails_auth_flow_redirects_2_3.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>???<br/>{name:...}</code></p>
       <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border "/>
     </td>
@@ -936,7 +934,7 @@ $ rake db:migrate
       <p><code>Provider App<br/>{name:...}</code></p>
       <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border "/>
     </td>
-    <td width="49%">
+    <td width="49%" class="fragment fade-in">
       <p><code>???<br/> Redirect /protected</code></p>
       <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
     </td>
@@ -1039,7 +1037,6 @@ $ rake db:migrate
 
       session[:user_id] = user.id
 
-      flash[:notice] = "Successfully logged in"
       redirect_to request.env['omniauth.origin'] || root_path
     end
     #...
@@ -1149,7 +1146,7 @@ $ rake db:migrate
   <tr>
     <td width="25%">&nbsp;</td>
     <td width="49%">
-      <p><code>omniauth/so_auth<br/> Redirect /protected</code></p>
+      <p><code>omniauth &amp; so_auth<br/> Redirect /protected</code></p>
       <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
     </td>
     <td width="25%">&nbsp;</td>
@@ -1172,7 +1169,6 @@ $ rake db:migrate
 <h2>Single sign off (Provider side)</h2>
 <pre><code class="ruby">
   class Oauth::SessionsController < Devise::SessionsController
-
     def set_user_cookie(user)
       cookies[:so_auth] = { :value => user.id, 
                             :domain => env_domain }
@@ -1186,9 +1182,7 @@ $ rake db:migrate
       domain = ENV['COOKIE_DOMAIN'] || "localhost"
       domain == "localhost" ? :all : domain
     end
-
     #...
-
   end
 
 </code></pre>
@@ -1296,7 +1290,6 @@ $ rake db:migrate
     # to the provider to clean up the there too!
     def destroy
       reset_session
-      flash[:notice] = 'You have successfully signed out!'
       redirect_to "#{ENV['AUTH_PROVIDER_URL']}/users/sign_out"
     end
   end
@@ -1493,9 +1486,9 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 <h2>Protect some content</h2>
 
 <pre><code class="ruby">
-  # spec/dummy/app/controllers/stuff_controller.rb
-  class StuffController < ApplicationController
-    before_filter :login_required, :only => [:private]
+  # app/controllers/some_controller.rb
+  class SomeController < ApplicationController
+    before_filter :login_required, :only => [:private_stuff]
   end
 
 </code></pre>
@@ -1503,10 +1496,7 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 
 
-<section>
-  <h2>Demo</h2>
-  <iframe src="http://so-auth-client.octolabs.com/" frameborder="0" width="100%" height="500px"></iframe>
-</section>
+
 
 
 
