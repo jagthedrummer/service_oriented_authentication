@@ -36,6 +36,12 @@ html.intro .reveal .slides{
 }
 
 
+html.left-align .reveal .slides{
+  text-align:left;
+}
+
+
+
 html.code.client body .reveal{
   background:#fee;
 }
