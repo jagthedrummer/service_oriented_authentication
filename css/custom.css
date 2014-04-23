@@ -114,6 +114,7 @@ html.last-slide table img{
   margin-left:-5%;
   padding:5px;
   max-height:800px;
+  font-weight:bold;
 }
 
 pre .comment{
