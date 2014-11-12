@@ -98,7 +98,7 @@
 
         <section>
           <h2>Now a collection of services</h2>
-          <img src="img/cloudhdr.png" alt="CloudHDR Structure"  class="no-border"/>
+          <img src="img/cloudhdr.png" alt="CloudHDR Structure"  class="no-border" style="max-height:600px;"/>
           <aside class="notes">
             I know what you're thinking.
             (What if I'm not ready to split everything up?)
@@ -123,17 +123,17 @@
 
         <section>
           <h2>Start where you are</h2>
-          <img src="img/mc-soa-0.png" alt="" class="no-border "/>
+          <img src="img/mc-soa-0.png" alt="" class="no-border " style="max-height:600px;"/>
         </section>
 
         <section>
           <h2>Add an OAuth provider</h2>
-          <img src="img/mc-soa-oauth-0.png" alt="" class="no-border"/>
+          <img src="img/mc-soa-oauth-0.png" alt="" class="no-border" style="max-height:600px;"/>
         </section>
 
         <section>
           <h2>Add one service</h2>
-          <img src="img/mc-soa-oauth-1.png" alt="" class="no-border "/>
+          <img src="img/mc-soa-oauth-1.png" alt="" class="no-border " style="max-height:600px;"/>
         </section>
 
         <!--
@@ -145,7 +145,7 @@
 
         <section>
           <h2>SOA, FTW!</h2>
-          <img src="img/mc-soa-3.png" alt="" class="no-border "/>
+          <img src="img/mc-soa-3.png" alt="" class="no-border " style="max-height:600px;"/>
         </section>
 
         <section>
@@ -291,58 +291,58 @@
 
 <section>
   <p><code>Just a web client <br />&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_1_0.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_0.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>GET /protected <br />&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>Redirect #{provider}/authorize?client_id=123&state=yyz&response_type=code</code></p>
-  <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>GET #{provider}/authorize?client_id=123&state=yyz&response_type=code</code></p>
-  <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_3.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>Redirect #{consumer}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
-  <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_4.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 
 <section>
   <p><code>GET #{consumer}/callback<br/>?code=abc&state=yyz&response_type=code</code></p>
-  <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_0.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>POST /oauth/token?<br/>client_id=123&client_secret=456&code=abc</code></p>
-  <img src="img/rails_auth_flow_redirects_2_1.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_1.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>{token:'42ab', refresh_token:'9876', uid:'jag'}<br/>&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_2_2.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_2.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>GET /me.json?token=42ab<br/>&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_2_3.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_3.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>{id:111, name:"Jeremy Green", <br/>email:"jeremy@octolabs.com"}</code></p>
-  <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_4.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>Redirect /protected <br />&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_2_5.png" alt="" class="no-border " style="max-height:600px;"/>
   <aside class="notes">
   </aside>
 </section>
@@ -350,12 +350,12 @@
 
 <section>
   <p><code>GET /protected <br />&nbsp;</code></p>
-  <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_1.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
   <p><code>200 OK /protected <br />Whew!</code></p>
-  <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border "/>
+  <img src="img/rails_auth_flow_redirects_1_2.png" alt="" class="no-border " style="max-height:600px;"/>
 </section>
 
 <section>
@@ -1622,17 +1622,17 @@ Installing a Gem on Heroku from a Private GitHub Repo<br/>
 
 <section>
   <h2>Start where you are</h2>
-  <img src="img/mc-soa-0.png" alt="" class="no-border fragment fade-in"/>
+  <img src="img/mc-soa-0.png" alt="" class="no-border fragment fade-in" style="max-height:600px;"/>
 </section>
 
 <section>
   <h2>Add an OAuth provider</h2>
-  <img src="img/mc-soa-oauth-0.png" alt="" class="no-border"/>
+  <img src="img/mc-soa-oauth-0.png" alt="" class="no-border" style="max-height:600px;"/>
 </section>
 
 <section>
   <h2>Add one service</h2>
-  <img src="img/mc-soa-oauth-1.png" alt="" class="no-border"/>
+  <img src="img/mc-soa-oauth-1.png" alt="" class="no-border" style="max-height:600px;"/>
 </section>
 
 <section data-background="img/autumn_bean_crop.jpg" data-state="title-slide last-slide">
